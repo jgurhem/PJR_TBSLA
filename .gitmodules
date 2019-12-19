@@ -1,0 +1,3 @@
+[submodule "pjr"]
+	path = pjr
+	url = git@github.com:jgurhem/PJR_CORE.git
