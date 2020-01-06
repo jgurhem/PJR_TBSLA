@@ -30,9 +30,13 @@ fig = plt.figure()
 ax = fig.gca()
 
 for k, v in m.items():
-  for kv in v:
-    v[kv] = v[kv].get_mean()
-  ax.plot(v.keys(), v.values(), label=str(list(json.loads(k.replace("'", '"')).values())), marker='*')
+  nv = dict()
+  for kv in coi_set:
+    if kv in v:
+      nv[kv] = v[kv].get_min()
+    else:
+      nv[kv] = None
+  ax.plot(nv.keys(), nv.values(), label=str(list(json.loads(k.replace("'", '"')).values())), marker='*')
 
 ax.set_ylabel("Time")
 ax.set_xlabel(args.coi)
