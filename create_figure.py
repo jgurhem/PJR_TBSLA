@@ -39,7 +39,7 @@ xvec = np.arange(len(coi_set))
 for k in sorted(m.keys()):
   v = m[k]
   print()
-  print(k, v)
+  print(k, {k2:round(v2, 4) if isinstance(v2, float) else v2 for k2,v2 in v.items()})
   ax.plot(xvec, [v[str(x) + '_min'] for x in coi_set], label=str(k).replace("'",''), marker='*')
 
 ax.set_ylabel("Time")
