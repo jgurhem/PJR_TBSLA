@@ -36,7 +36,8 @@ ax = fig.gca()
 
 xvec = np.arange(len(coi_set))
 
-for k, v in m.items():
+for k in sorted(m.keys()):
+  v = m[k]
   print()
   print(k, v)
   ax.plot(xvec, [v[str(x) + '_min'] for x in coi_set], label=str(k).replace("'",''), marker='*')
