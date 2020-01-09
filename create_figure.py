@@ -16,6 +16,8 @@ parser.add_argument('-s', '--list-sub-cases', type=str, help='list of attributes
 parser.add_argument('-voi', type=str, help='value of interest', dest='voi', required=True)
 parser.add_argument('-coi', type=str, help='case of interest', dest='coi', required=True)
 parser.add_argument('-o', type=str, help='Name of the output figure file', dest='output', default='output.pdf')
+parser.add_argument('-par', help='Print attributes range', dest='par', default=False, action='store_true')
+parser.add_argument('-pv', help='Print values for the figure', dest='pv', default=False, action='store_true')
 args = parser.parse_args()
 
 filter_dict = dh.convert_filter_list_to_dic(args.filter_list)
@@ -25,8 +27,9 @@ for i in args.list_sub_cases:
   case_info.append(i)
 input_res = dh.read_json_file(args.input, filter_dict, case_info, prop.VALUE_INFO)
 
-for i in prop.CASE_INFO:
-  print(i, dh.extract_set(input_res, i))
+if args.par:
+  for i in prop.CASE_INFO:
+    print(i, dh.extract_set(input_res, i))
 
 m, coi_set = dr.matrix_relation(input_res, args.list_cases, args.list_sub_cases, args.coi, args.voi, 'auto', ['min'])
 coi_set = sorted(coi_set, key=float)
@@ -38,8 +41,9 @@ xvec = np.arange(len(coi_set))
 
 for k in sorted(m.keys()):
   v = m[k]
-  print()
-  print(k, {k2:round(v2, 4) if isinstance(v2, float) else v2 for k2,v2 in v.items()})
+  if args.pv:
+    print()
+    print(k, {k2:round(v2, 4) if isinstance(v2, float) else v2 for k2,v2 in v.items()})
   ax.plot(xvec, [v[str(x) + '_min'] for x in coi_set], label=str(k).replace("'",''), marker='*')
 
 ax.set_ylabel("Time")
