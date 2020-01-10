@@ -25,7 +25,7 @@ case_info = list(args.list_cases)
 case_info.append(args.coi)
 for i in args.list_sub_cases:
   case_info.append(i)
-input_res = dh.read_json_file(args.input, filter_dict, case_info, prop.VALUE_INFO)
+input_res = dh.read_json_file('test.db', args.input, filter_dict, case_info, prop.VALUE_INFO)
 
 if args.par:
   for i in prop.CASE_INFO:
