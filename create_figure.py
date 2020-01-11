@@ -21,7 +21,8 @@ parser.add_argument('-pv', help='Print values for the figure', dest='pv', defaul
 args = parser.parse_args()
 
 filter_dict = dh.convert_filter_list_to_dic(args.filter_list)
-case_info = list(args.list_cases)
+dict_cases = dh.convert_filter_list_to_dic(args.list_cases)
+case_info = list(dict_cases.keys())
 case_info.append(args.coi)
 for i in args.list_sub_cases:
   case_info.append(i)
@@ -31,7 +32,7 @@ if args.par:
   for i in prop.CASE_INFO:
     print(i, dh.extract_set(input_res, i))
 
-m, coi_set = dr.matrix_relation(input_res, args.list_cases, args.list_sub_cases, args.coi, args.voi, 'auto', ['min'])
+m, coi_set = dr.matrix_relation(input_res, dict_cases, args.list_sub_cases, args.coi, args.voi, 'auto', ['min'])
 coi_set = sorted(coi_set, key=float)
 
 fig = plt.figure()
