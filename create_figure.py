@@ -13,6 +13,7 @@ parser.add_argument('-coi', type=str, help='case of interest', dest='coi', requi
 parser.add_argument('-o', type=str, help='Name of the output figure file', dest='output', default='output.pdf')
 parser.add_argument('-par', help='Print attributes range', dest='par', default=False, action='store_true')
 parser.add_argument('-pv', help='Print values for the figure', dest='pv', default=False, action='store_true')
+parser.add_argument('-rt', '--rotate-ticks', help='Rotate ticks', dest='rt', default=False, action='store_true')
 args = parser.parse_args()
 
 filter_dict = dh.convert_filter_list_to_dic(args.filter_list)
@@ -32,6 +33,8 @@ coi_set = sorted(coi_set, key=float)
 
 fig = plot.plot_axis(m, coi_set, 'min', args.coi, 'Time', args.pv)
 
+if args.rt:
+  plot.rotate_xticks(coi_set)
 
 plot.save(fig, args.output)
 
