@@ -25,42 +25,46 @@ stat = 'mean'
 for nc in NCv:
   filter_prefix = f'all_plots_nc{nc}'
   dh.create_filter(con, filter_prefix, {'NC' : [nc], 'test' : ['a_axpx'], 'C' : [300], 'matrixtype' : ['cqmat'], 'success' : ['true'], 'machine' : ['Poincare']})
-  dh.create_case_table(con, filter_prefix, ['lang', 'format', 'Q', 'nodes', 'N'])
+  dh.create_case_table(con, filter_prefix, ['lang', 'format', 'Q', 'nodes', 'GR', 'GC'])
   dh.compute_stats(con, filter_prefix, voi)
   
   langv = list(dh.extract_set_all_values(con, 'lang'))
   Qv = list(dh.extract_set_all_values(con, 'Q'))
   formatv = list(dh.extract_set_all_values(con, 'format'))
+
+  print(langv)
+  print(Qv)
+
   for q in Qv:
-    m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [], 'Q' : [q]}, ['N'], 'nodes', voi, filter_prefix, [stat])
+    m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [], 'Q' : [q]}, ['GR', 'GC'], 'nodes', voi, filter_prefix, [stat])
     coi_set = sorted(coi_set, key=float)
     fig = plot.plot_axis(m, coi_set, stat, 'nodes', 'Time', args.pv)
     plot.save(fig, f'{args.out}/nc{nc}_q{q}.pdf')
 
     for l in langv:
-      m, coi_set = dr.matrix_relation(con, {'lang' : [l], 'format' : [], 'Q' : [q]}, ['N'], 'nodes', voi, filter_prefix, [stat])
+      m, coi_set = dr.matrix_relation(con, {'lang' : [l], 'format' : [], 'Q' : [q]}, ['GR', 'GC'], 'nodes', voi, filter_prefix, [stat])
       coi_set = sorted(coi_set, key=float)
       fig = plot.plot_axis(m, coi_set, stat, 'nodes', 'Time', args.pv)
       plot.save(fig, f'{args.out}/nc{nc}_q{q}_lang{l}.pdf')
 
   for f in formatv:
-    m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [f], 'Q' : []}, ['N'], 'nodes', voi, filter_prefix, [stat])
+    m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [f], 'Q' : []}, ['GR', 'GC'], 'nodes', voi, filter_prefix, [stat])
     coi_set = sorted(coi_set, key=float)
     fig = plot.plot_axis(m, coi_set, stat, 'nodes', 'Time', args.pv)
     plot.save(fig, f'{args.out}/nc{nc}_format{f}.pdf')
 
     for l in langv:
-      m, coi_set = dr.matrix_relation(con, {'lang' : [l], 'format' : [f], 'Q' : []}, ['N'], 'nodes', voi, filter_prefix, [stat])
+      m, coi_set = dr.matrix_relation(con, {'lang' : [l], 'format' : [f], 'Q' : []}, ['GR', 'GC'], 'nodes', voi, filter_prefix, [stat])
       coi_set = sorted(coi_set, key=float)
       fig = plot.plot_axis(m, coi_set, stat, 'nodes', 'Time', args.pv)
       plot.save(fig, f'{args.out}/nc{nc}_format{f}_lang{l}.pdf')
   
-  m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [], 'Q' : [0.2, 0.4, 0.6]}, ['N'], 'nodes', voi, filter_prefix, [stat])
+  m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [], 'Q' : [0.2, 0.4, 0.6]}, ['GR', 'GC'], 'nodes', voi, filter_prefix, [stat])
   coi_set = sorted(coi_set, key=float)
   fig = plot.plot_axis(m, coi_set, stat, 'nodes', 'Time', args.pv)
   plot.save(fig, f'{args.out}/nc{nc}_nodes.pdf')
 
-  m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [], 'nodes' : []}, ['N'], 'Q', voi, filter_prefix, [stat])
+  m, coi_set = dr.matrix_relation(con, {'lang' : [], 'format' : [], 'nodes' : []}, ['GR', 'GC'], 'Q', voi, filter_prefix, [stat])
   coi_set = sorted(coi_set, key=float)
   fig = plot.plot_axis(m, coi_set, stat, 'Q', 'Time', args.pv)
   plot.save(fig, f'{args.out}/nc{nc}_q.pdf')
