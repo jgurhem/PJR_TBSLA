@@ -11,6 +11,7 @@ parser.add_argument('-s', '--list-sub-cases', type=str, help='list of attributes
 parser.add_argument('-voi', type=str, help='value of interest', dest='voi', required=True)
 parser.add_argument('-coi', type=str, help='case of interest', dest='coi', required=True)
 parser.add_argument('-o', type=str, help='Name of the output figure file', dest='output', default='output.pdf')
+parser.add_argument('-dbo', type=str, help='Name of the output database file', dest='dbo', default='test.db')
 parser.add_argument('-par', help='Print attributes range', dest='par', default=False, action='store_true')
 parser.add_argument('-pv', help='Print values for the figure', dest='pv', default=False, action='store_true')
 parser.add_argument('-rt', '--rotate-ticks', help='Rotate ticks', dest='rt', default=False, action='store_true')
@@ -22,7 +23,7 @@ case_info = list(dict_cases.keys())
 case_info.append(args.coi)
 for i in args.list_sub_cases:
   case_info.append(i)
-input_res = dh.read_json_file('test.db', args.input, filter_dict, case_info, prop.VALUE_INFO)
+input_res = dh.read_json_file(args.dbo, args.input, filter_dict, case_info, prop.VALUE_INFO)
 
 if args.par:
   for i in prop.CASE_INFO:
