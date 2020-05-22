@@ -36,3 +36,11 @@ def rotate_xticks(xticklabels):
   margin = m / plt.gcf().get_size_inches()[0]
   plt.gcf().subplots_adjust(left=margin, right=1. - margin)
   plt.gcf().set_size_inches(s, plt.gcf().get_size_inches()[1])
+
+def plot_axis_add_cores_to_node_count(fig, node_set, cores_per_nodes):
+  ax = fig.gca()
+  xlab = list()
+  for i in node_set:
+    xlab.append(str(i) + ' (' + str(i * cores_per_nodes) + ')')
+  ax.xaxis.set_ticklabels(xlab)
+  return fig

@@ -12,6 +12,7 @@ parser.add_argument('-voi', type=str, help='value of interest', dest='voi', requ
 parser.add_argument('-coi', type=str, help='case of interest', dest='coi', required=True)
 parser.add_argument('-xlabel', type=str, help='x label', dest='xlabel', default='')
 parser.add_argument('-ylabel', type=str, help='y label', dest='ylabel', default='')
+parser.add_argument('-cpn', type=int, help='number of cores per node', dest='cpn', default=0)
 parser.add_argument('-o', type=str, help='Name of the output figure file', dest='output', default='output.pdf')
 parser.add_argument('-dbo', type=str, help='Name of the output database file', dest='dbo', default='test.db')
 parser.add_argument('-par', help='Print attributes range', dest='par', default=False, action='store_true')
@@ -41,6 +42,8 @@ if xlabel == '':
 if ylabel == '':
   ylabel = 'Time'
 fig = plot.plot_axis(m, coi_set, 'mean', xlabel, ylabel, args.pv)
+if args.cpn > 0:
+  plot.plot_axis_add_cores_to_node_count(fig, coi_set, args.cpn)
 
 if args.rt:
   plot.rotate_xticks(coi_set)
