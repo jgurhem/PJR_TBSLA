@@ -44,3 +44,8 @@ def plot_axis_add_cores_to_node_count(fig, node_set, cores_per_nodes):
     xlab.append(str(i) + ' (' + str(i * cores_per_nodes) + ')')
   ax.xaxis.set_ticklabels(xlab)
   return fig
+
+def grid(fig, axis):
+  #plt.grid(axis=axis, linestyle=':', linewidth='0.5', color='black')
+  plt.grid(axis=axis, linestyle=':', color='black')
+  return fig
