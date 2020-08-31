@@ -11,6 +11,7 @@ parser.add_argument('-s', '--list-sub-cases', type=str, help='list of attributes
 parser.add_argument('-r', '--list-ratio-condition', type=str, help='list of ratios the cases have to respect in the from of : param1(str),param2(str),ratio(double) where param1*ratio=param2', action='append', dest='list_ratio', default=list())
 parser.add_argument('-voi', type=str, help='value of interest', dest='voi', required=True)
 parser.add_argument('-coi', type=str, help='case of interest', dest='coi', required=True)
+parser.add_argument('-op', type=str, help='Operation used to compute statistics on the values of the same case (mean, min, max, median, sum, std, var)', dest='op', default='mean')
 parser.add_argument('-xlabel', type=str, help='x label', dest='xlabel', default='')
 parser.add_argument('-ylabel', type=str, help='y label', dest='ylabel', default='')
 parser.add_argument('-grid', type=str, help='Pass grid property to matplotlib \'x\' \'y\' \'both\'', dest='grid', default='')
@@ -34,7 +35,7 @@ if args.par:
   for i in prop.CASE_INFO:
     print(i, dh.extract_set(input_res, i))
 
-m, coi_set = dr.matrix_relation(input_res, dict_cases, args.list_sub_cases, args.coi, args.voi, 'auto', ['min'], args.list_ratio)
+m, coi_set = dr.matrix_relation(input_res, dict_cases, args.list_sub_cases, args.coi, args.voi, 'auto', [args.op], args.list_ratio)
 coi_set = sorted(coi_set, key=float)
 
 xlabel = args.xlabel
@@ -43,7 +44,7 @@ if xlabel == '':
   xlabel = args.coi
 if ylabel == '':
   ylabel = 'Time'
-fig = plot.plot_axis(m, coi_set, 'mean', xlabel, ylabel, args.pv)
+fig = plot.plot_axis(m, coi_set, args.op, xlabel, ylabel, args.pv)
 if args.cpn > 0:
   plot.plot_axis_add_cores_to_node_count(fig, coi_set, args.cpn)
 if args.grid != '':
