@@ -28,7 +28,7 @@ case_info = list(dict_cases.keys())
 case_info.append(args.coi)
 for i in args.list_sub_cases:
   case_info.append(i)
-input_res = dh.read_json_file(args.dbo, args.input, filter_dict, case_info, prop.VALUE_INFO)
+input_res = dh.read_json_file(args.dbo, args.input, filter_dict, case_info, [args.voi])
 
 if args.par:
   for i in prop.CASE_INFO:
