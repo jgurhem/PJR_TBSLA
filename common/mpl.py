@@ -20,8 +20,8 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, pv):
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)
-  ax.xaxis.set_ticklabels(coi_set)
   ax.xaxis.set_ticks(xvec)
+  ax.xaxis.set_ticklabels(coi_set)
   ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
   return fig
 
