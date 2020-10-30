@@ -15,8 +15,8 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, pv):
       print()
       print(k)
       for k2,v2 in v.items():
-        print(k2, " :: ", round(v2, 4) if isinstance(v2, float) else v2)
-    ax.plot(xvec, [v[str(x) + '_' + attribute] for x in coi_set], label=str(k).replace("'",''), marker='*')
+        print(k2, " :: ", v2)
+    ax.plot(xvec, [v[x][attribute] for x in coi_set], label=str(k).replace("'",''), marker='*')
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)

@@ -4,6 +4,7 @@ import argparse
 import common.parser as cp
 import common.properties as prop
 import common.mpl as plot
+import common.latex as table
 
 parser = argparse.ArgumentParser(parents=[cp.get_common()])
 parser.add_argument('-l', '--list-cases', type=str, help='list of attributes to compare against the case of interest', action='append', dest='list_cases', required=True)
@@ -21,6 +22,7 @@ parser.add_argument('-dbo', type=str, help='Name of the output database file', d
 parser.add_argument('-par', help='Print attributes range', dest='par', default=False, action='store_true')
 parser.add_argument('-pv', help='Print values for the figure', dest='pv', default=False, action='store_true')
 parser.add_argument('-rt', '--rotate-ticks', help='Rotate ticks', dest='rt', default=False, action='store_true')
+parser.add_argument('--table', help='Generate Latex table with the results', dest='table', default=False, action='store_true')
 args = parser.parse_args()
 
 filter_dict = dh.convert_filter_list_to_dic(args.filter_list)
@@ -54,4 +56,6 @@ if args.rt:
   plot.rotate_xticks(coi_set)
 
 plot.save(fig, args.output)
+if args.table:
+  table.table(m, args.output + '.tex')
 
