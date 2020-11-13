@@ -3,12 +3,15 @@ import numpy as np
 def table(m, filename):
   row_keys = set()
   column_keys = set()
+  N_key = ''
   for v in m.values():
     for k , v in v.items():
       row_keys.add(k)
       for i in v.keys():
         if not i.startswith('__'):
           column_keys.add(i)
+        if i.startswith('__') and i.endswith('.N'):
+          N_key = i
   row_keys = sorted(row_keys)
   column_keys = sorted(column_keys)
 
@@ -20,7 +23,7 @@ def table(m, filename):
   r += 'Cases & Nodes'
   for i in column_keys:
     r += f'& {i}'
-  r += '\\\\'
+  r += ' & N \\\\'
   r += '\n\\hline\n'
 
   for k in sorted(m.keys()):
@@ -30,6 +33,7 @@ def table(m, filename):
       r += '& ' + str(kr)
       for kc in column_keys:
         r += '& ' + str(round(v[kr][kc], 4) if isinstance(v[kr][kc], float) else v[kr][kc])
+      r += '& ' + str(v[kr].get(N_key, 0))
       r += '\\\\\n'
     r += '\\hline\n'
 
