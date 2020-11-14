@@ -26,7 +26,7 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, pv):
   return fig
 
 def save(fig, out_file):
-  fig.savefig(out_file, bbox_inches="tight")
+  fig.savefig(out_file, bbox_inches="tight", metadata={'CreationDate': None})
   plt.close()
 
 def rotate_xticks(xticklabels):
