@@ -2,13 +2,15 @@ import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+import json
+import re
 
-def plot_axis(m, coi_set, attribute, xlabel, ylabel, pv):
+def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv):
   fig = plt.figure()
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
 
-  for k in sorted(m.keys()):
+  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
     v = m[k]
     if pv:
       print()
@@ -16,7 +18,8 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, pv):
       print(k)
       for k2,v2 in v.items():
         print(k2, " :: ", v2)
-    ax.plot(xvec, [v[x][attribute] for x in coi_set], label=str(k).replace("'",''), marker='*')
+    k_dict = json.loads(k)
+    ax.plot(xvec, [v[x][attribute] for x in coi_set], label=str(tuple([k_dict[i] for i in legend])).replace("'",''), marker='*')
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)

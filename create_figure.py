@@ -46,7 +46,7 @@ if xlabel == '':
   xlabel = args.coi
 if ylabel == '':
   ylabel = 'Time'
-fig = plot.plot_axis(m, coi_set, args.op, xlabel, ylabel, args.pv)
+fig = plot.plot_axis(m, coi_set, args.op, xlabel, ylabel, dict_cases.keys(), args.pv)
 if args.cpn > 0:
   plot.plot_axis_add_cores_to_node_count(fig, coi_set, args.cpn)
 if args.grid != '':

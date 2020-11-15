@@ -1,6 +1,8 @@
 import numpy as np
+import json
+import re
 
-def table(m, filename):
+def table(m, filename, legend):
   row_keys = set()
   column_keys = set()
   N_key = ''
@@ -26,9 +28,10 @@ def table(m, filename):
   r += ' & N \\\\'
   r += '\n\\hline\n'
 
-  for k in sorted(m.keys()):
+  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
     v = m[k]
-    r += '\multirow{' + str(len(row_keys)) + '}{*}{' + str(k) + '}'
+    k_dict = json.loads(k)
+    r += '\multirow{' + str(len(row_keys)) + '}{*}{' + str(tuple([k_dict[i] for i in legend])) + '}'
     for kr in row_keys:
       r += '& ' + str(kr)
       for kc in column_keys:
