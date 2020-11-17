@@ -25,7 +25,10 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv):
   ax.set_xlabel(xlabel)
   ax.xaxis.set_ticks(xvec)
   ax.xaxis.set_ticklabels(coi_set)
-  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+  #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+  #ax.legend(loc='upper center', bbox_to_anchor=(0.5, 0))
+  #ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1))
+  ax.legend(loc='best')
   return fig
 
 def save(fig, out_file):
