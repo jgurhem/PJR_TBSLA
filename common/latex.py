@@ -22,7 +22,7 @@ def table(m, filename, legend):
 
   r = ''
   r += '\\begin{tabular}{'
-  r += 'c' * (len(column_keys) + 3)
+  r += 'c' * (len(column_keys) + 4)
   r += '}\n\\hline\n'
 
   r += 'Cases & Nodes'
