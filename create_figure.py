@@ -26,8 +26,7 @@ parser.add_argument('--table', help='Generate Latex table with the results', des
 args = parser.parse_args()
 
 filter_dict = dh.convert_filter_list_to_dic(args.filter_list)
-dict_cases = dh.convert_filter_list_to_dic(args.list_cases)
-case_info = list(dict_cases.keys())
+case_info = args.list_cases.copy()
 case_info.append(args.coi)
 for i in args.list_sub_cases:
   case_info.append(i)
@@ -37,7 +36,7 @@ if args.par:
   for i in prop.CASE_INFO:
     print(i, dh.extract_set(input_res, i))
 
-m, coi_set = dr.matrix_relation(input_res, dict_cases, args.list_sub_cases, args.coi, args.voi, 'auto', [args.op], args.list_ratio)
+m, coi_set = dr.matrix_relation(input_res, filter_dict, args.list_cases, args.list_sub_cases, args.coi, args.voi, 'auto', [args.op], args.list_ratio)
 coi_set = sorted(coi_set, key=float)
 
 xlabel = args.xlabel
@@ -46,7 +45,7 @@ if xlabel == '':
   xlabel = args.coi
 if ylabel == '':
   ylabel = 'Time'
-fig = plot.plot_axis(m, coi_set, args.op, xlabel, ylabel, dict_cases.keys(), args.pv)
+fig = plot.plot_axis(m, coi_set, args.op, xlabel, ylabel, args.list_cases, args.pv)
 if args.cpn > 0:
   plot.plot_axis_add_cores_to_node_count(fig, coi_set, args.cpn)
 if args.grid != '':
