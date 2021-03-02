@@ -5,6 +5,12 @@ import numpy as np
 import json
 import re
 
+def genlabel(in_):
+  s = ''
+  for i in in_:
+    s += str(i) + ', '
+  return s.rstrip(', ')
+
 def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear'):
   fig = plt.figure()
   ax = fig.gca()
@@ -19,7 +25,7 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linea
       for k2,v2 in v.items():
         print(k2, " :: ", v2)
     k_dict = json.loads(k)
-    ax.plot(xvec, [v[x][attribute] for x in coi_set], label=str(tuple([k_dict[i] for i in legend])).replace("'",''), marker='*')
+    ax.plot(xvec, [v[x][attribute] for x in coi_set], label=genlabel([k_dict[i] for i in legend]), marker='*')
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)
@@ -60,7 +66,7 @@ def plot_bar(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear
     xvec_bar = []
     for i in xvec:
       xvec_bar.append(i + pos * width / len_mkeys - width / 2 + width / len_mkeys / 2)
-    rects = ax.bar(xvec_bar, [v[x][attribute] for x in coi_set], width / len_mkeys, label=str(tuple([k_dict[i] for i in legend])).replace("'",''))
+    rects = ax.bar(xvec_bar, [v[x][attribute] for x in coi_set], width / len_mkeys, label=genlabel([k_dict[i] for i in legend]))
     for rect in rects:
       height = rect.get_height()
       ax.annotate(f'{height:.0f}', xy=(rect.get_x() + rect.get_width() / 2, height), xytext=(1, 3), textcoords="offset pixels", rotation=90, size=9, in_layout=True, ha='center', va='bottom')
@@ -101,7 +107,7 @@ def plot_ratios_1_on_n_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, x
         yvec.append(None)
       else:
         yvec.append(v[coi_set[0]][attribute] / v[x][attribute])
-    ax.plot(xvec, yvec, label=str(tuple([k_dict[i] for i in legend])).replace("'",''), marker='*')
+    ax.plot(xvec, yvec, label=genlabel([k_dict[i] for i in legend]), marker='*')
 
   if ideal:
     ideald = dict()
@@ -145,7 +151,7 @@ def plot_ratios_n_on_1_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, x
         yvec.append(None)
       else:
         yvec.append(v[x][attribute] / v[coi_set[0]][attribute])
-    ax.plot(xvec, yvec, label=str(tuple([k_dict[i] for i in legend])).replace("'",''), marker='*')
+    ax.plot(xvec, yvec, label=genlabel([k_dict[i] for i in legend]), marker='*')
 
   if ideal:
     ideald = dict()
