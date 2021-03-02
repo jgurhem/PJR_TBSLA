@@ -40,6 +40,137 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linea
   ax.legend(loc='best')
   return fig
 
+def plot_bar(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear'):
+  fig = plt.figure()
+  ax = fig.gca()
+  xvec = np.arange(len(coi_set))
+  width = 0.85
+  len_mkeys = len(m.keys())
+  pos = 0
+
+  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+    v = m[k]
+    if pv:
+      print()
+      print()
+      print(k)
+      for k2,v2 in v.items():
+        print(k2, " :: ", v2)
+    k_dict = json.loads(k)
+    print([v[x][attribute] for x in coi_set])
+    print(xvec)
+    xvec_bar = []
+    for i in xvec:
+      xvec_bar.append(i + pos * width / len_mkeys - width / 2 + width / len_mkeys / 2)
+    rects = ax.bar(xvec_bar, [v[x][attribute] for x in coi_set], width / len_mkeys, label=str(tuple([k_dict[i] for i in legend])).replace("'",''))
+    for rect in rects:
+      height = rect.get_height()
+      ax.annotate(f'{height:.0f}', xy=(rect.get_x() + rect.get_width() / 2, height), xytext=(1, 3), textcoords="offset pixels", rotation=90, size=9, in_layout=True, ha='center', va='bottom')
+    pos = pos + 1
+
+  ax.set_ylabel(ylabel)
+  ax.set_xlabel(xlabel)
+  ax.set_xscale(xscale)
+  ax.set_yscale(yscale)
+  if yscale == 'log':
+    ax.yaxis.set_major_locator(mpl.ticker.LogLocator(subs='all', base=5))
+    ax.yaxis.set_minor_locator(mpl.ticker.LogLocator(subs='all', base=5))
+    ax.yaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(mpl.ticker.ScalarFormatter())
+  ax.xaxis.set_ticks(xvec)
+  ax.xaxis.set_ticklabels(coi_set)
+  plt.margins(y=0.12)
+  ax.legend(loc='best')
+  return fig
+
+def plot_ratios_1_on_n_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', ideal = True):
+  fig = plt.figure()
+  ax = fig.gca()
+  xvec = np.arange(len(coi_set))
+
+  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+    v = m[k]
+    if pv:
+      print()
+      print()
+      print(k)
+      for k2,v2 in v.items():
+        print(k2, " :: ", v2)
+    k_dict = json.loads(k)
+    yvec = []
+    for x in coi_set:
+      if v[x][attribute] == None:
+        yvec.append(None)
+      else:
+        yvec.append(v[coi_set[0]][attribute] / v[x][attribute])
+    ax.plot(xvec, yvec, label=str(tuple([k_dict[i] for i in legend])).replace("'",''), marker='*')
+
+  if ideal:
+    ideald = dict()
+    pos = 1
+    for i in sorted(coi_set, key=float):
+      ideald[i] = pos
+      pos *= 2
+    ax.plot(ideald.keys(), ideald.values(), label='Ideal')
+
+  ax.set_ylabel(ylabel)
+  ax.set_xlabel(xlabel)
+  ax.set_xscale(xscale)
+  ax.set_yscale(yscale)
+  if yscale == 'log':
+    ax.yaxis.set_major_locator(mpl.ticker.LogLocator(subs='all', base=2))
+    ax.yaxis.set_minor_locator(mpl.ticker.LogLocator(subs='all', base=2))
+    ax.yaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(mpl.ticker.ScalarFormatter())
+  ax.xaxis.set_ticks(xvec)
+  ax.xaxis.set_ticklabels(coi_set)
+  ax.legend(loc='best')
+  return fig
+
+def plot_ratios_n_on_1_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', ideal = True):
+  fig = plt.figure()
+  ax = fig.gca()
+  xvec = np.arange(len(coi_set))
+
+  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+    v = m[k]
+    if pv:
+      print()
+      print()
+      print(k)
+      for k2,v2 in v.items():
+        print(k2, " :: ", v2)
+    k_dict = json.loads(k)
+    yvec = []
+    for x in coi_set:
+      if v[x][attribute] == None:
+        yvec.append(None)
+      else:
+        yvec.append(v[x][attribute] / v[coi_set[0]][attribute])
+    ax.plot(xvec, yvec, label=str(tuple([k_dict[i] for i in legend])).replace("'",''), marker='*')
+
+  if ideal:
+    ideald = dict()
+    pos = 1
+    for i in sorted(coi_set, key=float):
+      ideald[i] = pos
+      pos *= 2
+    ax.plot(ideald.keys(), ideald.values(), label='Ideal')
+
+  ax.set_ylabel(ylabel)
+  ax.set_xlabel(xlabel)
+  ax.set_xscale(xscale)
+  ax.set_yscale(yscale)
+  if yscale == 'log':
+    ax.yaxis.set_major_locator(mpl.ticker.LogLocator(subs='all', base=2))
+    ax.yaxis.set_minor_locator(mpl.ticker.LogLocator(subs='all', base=2))
+    ax.yaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(mpl.ticker.ScalarFormatter())
+  ax.xaxis.set_ticks(xvec)
+  ax.xaxis.set_ticklabels(coi_set)
+  ax.legend(loc='best')
+  return fig
+
 def save(fig, out_file):
   fig.savefig(out_file, bbox_inches="tight", metadata={'CreationDate': None})
   plt.close()
