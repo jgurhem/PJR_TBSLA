@@ -5,7 +5,7 @@ import numpy as np
 import json
 import re
 
-def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv):
+def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear'):
   fig = plt.figure()
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
@@ -23,6 +23,15 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv):
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)
+  ax.set_xscale(xscale)
+  ax.set_yscale(yscale)
+  if yscale == 'log':
+    #ax.yaxis.set_major_locator(mpl.ticker.MultipleLocator(1.00))
+    #ax.yaxis.set_minor_locator(mpl.ticker.MultipleLocator(0.25))
+    ax.yaxis.set_major_locator(mpl.ticker.LogLocator(subs='all', base=5))
+    ax.yaxis.set_minor_locator(mpl.ticker.LogLocator(subs='all', base=5))
+    ax.yaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(mpl.ticker.ScalarFormatter())
   ax.xaxis.set_ticks(xvec)
   ax.xaxis.set_ticklabels(coi_set)
   #ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
