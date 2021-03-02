@@ -57,8 +57,6 @@ def plot_bar(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear
       for k2,v2 in v.items():
         print(k2, " :: ", v2)
     k_dict = json.loads(k)
-    print([v[x][attribute] for x in coi_set])
-    print(xvec)
     xvec_bar = []
     for i in xvec:
       xvec_bar.append(i + pos * width / len_mkeys - width / 2 + width / len_mkeys / 2)
