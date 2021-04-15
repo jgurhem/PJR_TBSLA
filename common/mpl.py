@@ -11,12 +11,16 @@ def genlabel(in_):
     s += str(i) + ', '
   return s.rstrip(', ')
 
-def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear'):
+def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True):
   fig = plt.figure()
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
 
-  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+  if sort:
+    keys = sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)])
+  else:
+   keys = m.keys()
+  for k in keys:
     v = m[k]
     if pv:
       print()
