@@ -11,7 +11,10 @@ def genlabel(in_):
     s += str(i) + ', '
   return s.rstrip(', ')
 
-def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True):
+def FUNC_DEFAULT(x, y):
+  return x
+
+def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True, func = FUNC_DEFAULT):
   fig = plt.figure()
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
@@ -29,7 +32,7 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linea
       for k2,v2 in v.items():
         print(k2, " :: ", v2)
     k_dict = json.loads(k)
-    ax.plot(xvec, [v[x][attribute] for x in coi_set], label=genlabel([k_dict[i] for i in legend]), marker='*')
+    ax.plot(xvec, [func(v[x][attribute], v[x]) for x in coi_set], label=genlabel([k_dict[i] for i in legend]), marker='*')
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)
