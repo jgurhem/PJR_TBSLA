@@ -14,7 +14,7 @@ def genlabel(in_):
 def FUNC_DEFAULT(x, y):
   return x
 
-def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True, func = FUNC_DEFAULT):
+def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True, func = FUNC_DEFAULT, keep_missing = True):
   fig = plt.figure()
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
@@ -32,7 +32,18 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linea
       for k2,v2 in v.items():
         print(k2, " :: ", v2)
     k_dict = json.loads(k)
-    ax.plot(xvec, [func(v[x][attribute], v[x]) for x in coi_set], label=genlabel([k_dict[i] for i in legend]), marker='*')
+    if keep_missing:
+      x = xvec
+      y = [func(v[x][attribute], v[x]) for x in coi_set]
+    else:
+      x = []
+      y = []
+      for i, j in zip(xvec, coi_set):
+        val = func(v[j][attribute], v[j])
+        if val != None:
+          x.append(i)
+          y.append(val)
+    ax.plot(x, y, label=genlabel([k_dict[i] for i in legend]), marker='*')
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)
