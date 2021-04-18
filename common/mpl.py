@@ -202,6 +202,7 @@ def rotate_xticks(xticklabels):
   plt.margins(x = 0.01)
   plt.gcf().canvas.draw()
   tl = plt.gca().get_xticklabels()
+  if len(tl) == 0: return
   maxsize = max([t.get_window_extent().width for t in tl])
   m = 0.3 # inch margin
   s = maxsize / plt.gcf().dpi * len(xticklabels) + 2 * m
