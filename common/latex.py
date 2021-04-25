@@ -2,7 +2,7 @@ import numpy as np
 import json
 import re
 
-def table(m, filename, legend):
+def table(m, filename, legend, columns = list()):
   row_keys = set()
   column_keys = set()
   Nval_key = ''
@@ -11,7 +11,7 @@ def table(m, filename, legend):
     for k , v in v.items():
       row_keys.add(k)
       for i in v.keys():
-        if not i.startswith('__'):
+        if not i.startswith('__') and (len(columns) == 0 or (len(columns) > 0 and i in columns)):
           column_keys.add(i)
         if i.startswith('__') and i.endswith('.Nval'):
           Nval_key = i
