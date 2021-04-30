@@ -27,7 +27,8 @@ def table(m, filename, legend, columns = list()):
 
   r += 'Cases & Nodes'
   for i in column_keys:
-    r += f'& {i}'
+    newi = str(i).replace("_", "\_")
+    r += f'& {newi}'
   r += ' & N & Ncase \\\\'
   r += '\n\\hline\n'
 
