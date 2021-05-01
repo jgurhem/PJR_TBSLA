@@ -1,6 +1,7 @@
 import numpy as np
 import json
 import re
+from .mpl import genlabel
 
 def table(m, filename, legend, columns = list()):
   row_keys = set()
@@ -35,7 +36,7 @@ def table(m, filename, legend, columns = list()):
   for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
     v = m[k]
     k_dict = json.loads(k)
-    r += '\multirow{' + str(len(row_keys)) + '}{*}{' + str(tuple([k_dict[i] for i in legend])) + '}'
+    r += '\multirow{' + str(len(row_keys)) + '}{*}{' + genlabel([k_dict[i] for i in legend]) + '}'
     for kr in row_keys:
       r += '& ' + str(kr)
       for kc in column_keys:
