@@ -14,10 +14,12 @@ def genlabel(in_):
 def FUNC_DEFAULT(x, y):
   return x
 
-def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True, func = FUNC_DEFAULT, keep_missing = True):
+def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True, func = FUNC_DEFAULT, keep_missing = True, nbest = 0):
   fig = plt.figure()
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
+  xdict = dict()
+  ydict = dict()
 
   if sort:
     keys = sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)])
@@ -43,7 +45,20 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linea
         if val != None:
           x.append(i)
           y.append(val)
-    ax.plot(x, y, label=genlabel([k_dict[i] for i in legend]), marker='*')
+    label = genlabel([k_dict[i] for i in legend])
+    xdict[label] = x
+    ydict[label] = y
+  if nbest != 0 and keep_missing == True:
+    bestordered = dict()
+    toshow = set()
+    for i in range(len(xvec)):
+      bestordered[i] = sorted(ydict.keys(), key = lambda x:ydict[x][i])
+      toshow.update(list(bestordered[i][:nbest]))
+    for k in toshow:
+      ax.plot(xdict[k], ydict[k], label = k, marker='*')
+  else:
+    for k in xdict.keys():
+      ax.plot(xdict[k], ydict[k], label = k, marker='*')
 
   ax.set_ylabel(ylabel)
   ax.set_xlabel(xlabel)
