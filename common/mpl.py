@@ -53,7 +53,11 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linea
     toshow = set()
     for i in range(len(xvec)):
       bestordered[i] = sorted(ydict.keys(), key = lambda x:ydict[x][i])
-      toshow.update(list(bestordered[i][:nbest]))
+      if nbest > 0:
+        toshow.update(list(bestordered[i][:nbest]))
+      else:
+        toshow.update(list(bestordered[i][nbest:]))
+    toshow = sorted(toshow)
     for k in toshow:
       ax.plot(xdict[k], ydict[k], label = k, marker='*')
   else:
