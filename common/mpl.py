@@ -213,7 +213,7 @@ def plot_ratios_n_on_1_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, x
   return fig
 
 def save(fig, out_file):
-  fig.savefig(out_file, bbox_inches="tight", metadata={'CreationDate': None})
+  fig.savefig(out_file, metadata={'CreationDate': None})
   plt.close()
 
 def rotate_xticks(xticklabels):
