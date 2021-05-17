@@ -212,8 +212,8 @@ def plot_ratios_n_on_1_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, x
   ax.legend(loc='best')
   return fig
 
-def save(fig, out_file, bbox_inches = 'tight'):
-  fig.savefig(out_file, bbox_inches = bbox_inches, metadata = {'CreationDate': None})
+def save(fig, out_file, bbox_inches = 'tight', metadata = dict()):
+  fig.savefig(out_file, bbox_inches = bbox_inches, metadata = {**metadata, 'CreationDate': None})
   plt.close()
 
 def rotate_xticks(xticklabels):
