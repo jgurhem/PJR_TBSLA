@@ -1,9 +1,9 @@
 import numpy as np
 import json
 import re
-from .mpl import genlabel
+from .mpl import genlabel, FUNC_DEFAULT
 
-def table(m, filename, legend, columns = list()):
+def table(m, filename, legend, stat, columns = list(), func = FUNC_DEFAULT):
   row_keys = set()
   column_keys = set()
   Nval_key = ''
@@ -40,7 +40,11 @@ def table(m, filename, legend, columns = list()):
     for kr in row_keys:
       r += '& ' + str(kr)
       for kc in column_keys:
-        r += '& ' + str(round(v[kr][kc], 4) if isinstance(v[kr][kc], float) else v[kr][kc])
+        if kc == stat:
+          val = func(v[kr][kc], v[kr])
+        else:
+          val = v[kr][kc]
+        r += '& ' + str(round(val, 4) if isinstance(val, float) else val)
       r += '& ' + str(v[kr].get(Nval_key, 0))
       r += '& ' + str(v[kr].get(Ncase_key, 0))
       r += '\\\\\n'
