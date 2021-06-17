@@ -6,12 +6,10 @@ import json
 import re
 
 def genlabel(in_):
-  s = ''
-  for i in in_:
-    s += str(i) + ', '
-  return s.rstrip(', ')
+  return str(tuple(in_)).replace("'",'')
 
-def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear'):
+def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', rcparams = dict()):
+  plt.rcParams.update(rcparams)
   fig = plt.figure()
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
