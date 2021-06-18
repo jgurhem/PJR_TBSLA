@@ -1,10 +1,13 @@
 import sqlite3
+import warnings
+warnings.filterwarnings('ignore', message='Unknown infodict keyword:.*')
 from ..pjr import DBRelator as dr
 from . import mpl as plot
 from . import latex as table
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import json
+
 
 def get_nnz(y):
   nnz = 0
