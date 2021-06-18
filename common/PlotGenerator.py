@@ -107,7 +107,9 @@ class PlotGenerator:
       if self.npcn > 1:
         plot.plot_axis_add_cores_to_node_count(fig, coi_set, self.npcn)
       output_file_base = path + 'fig' + dict_to_name(filter_dict) + suffix
+      bbox_inches = 'tight'
       if self.enable_auto_title:
+        bbox_inches = None
         plt.title(dict_to_name(filter_dict).lstrip('_').replace(']_','] _'), wrap = True)
       metadata = dict()
       if self.add_metadata:
@@ -127,7 +129,7 @@ class PlotGenerator:
                   cmd += f' --{c} {i}'
               cmd += ';'
         metadata['submitcmd'] = cmd
-      plot.save(fig, output_file_base + '.pdf', bbox_inches = 'tight', metadata = metadata)
+      plot.save(fig, output_file_base + '.pdf', bbox_inches = bbox_inches, metadata = metadata)
       table.table(m, output_file_base + '.tex', list_cases, self.stat, columns, func = func)
       print(output_file_base + '.pdf')
     con.close()
