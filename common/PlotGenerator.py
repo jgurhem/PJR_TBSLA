@@ -77,6 +77,22 @@ class PlotGenerator:
     self.stat = stat
     self.casedefsub = casedefsub
     self.rcparams = rcparams
+    self.xscale = 'linear'
+    self.yscale = 'linear'
+    self.enable_auto_title = True
+    self.add_metadata = True
+
+  def set_xscale(self, xscale):
+    self.xscale = xscale
+
+  def set_yscale(self, yscale):
+    self.yscale = yscale
+
+  def set_enable_auto_title(self, enable_auto_title):
+    self.enable_auto_title = enable_auto_title
+
+  def set_add_metadata(self, add_metadata):
+    self.add_metadata = add_metadata
 
   def pdf(self, path, filter_dict, list_cases, list_sub_cases, columns, ylabel, func, nbest = 0, suffix = "", ratios = list()):
     mpl.rcParams.update(self.rcparams)
@@ -84,29 +100,31 @@ class PlotGenerator:
     m, coi_set = dr.matrix_relation(con, filter_dict, list_cases, list_sub_cases, self.coi, self.voi, 'auto', [self.stat], ratios = ratios)
     if len(m) > 0:
       coi_set = sorted(coi_set, key=float)
-      fig = plot.plot_axis(m, coi_set, self.stat, self.xlabel, ylabel, list_cases, False, func = func, nbest = nbest)
+      fig = plot.plot_axis(m, coi_set, self.stat, self.xlabel, ylabel, list_cases, False, func = func, nbest = nbest, xscale = self.xscale, yscale = self.yscale)
       if self.npcn > 1:
         plot.plot_axis_add_cores_to_node_count(fig, coi_set, self.npcn)
       output_file_base = path + 'fig' + dict_to_name(filter_dict) + suffix
-      plt.title(dict_to_name(filter_dict).lstrip('_').replace(']_','] _'), wrap = True)
-      cmd = ''
+      if self.enable_auto_title:
+        plt.title(dict_to_name(filter_dict).lstrip('_').replace(']_','] _'), wrap = True)
       metadata = dict()
-      for k1, d1 in m.items():
-        for k2, d2 in d1.items():
-          k1d = json.loads(k1)
-          k1d[self.coi] = k2
-          caseid = d2['__auto_cases.rowid']
-          if caseid != None:
-            metadata[dict_to_metakey(k1d) + '-sqlcasequery'] = d2['__sql_case_query']
-            metadata[dict_to_metakey(k1d) + '-sqlcontrib'] = d2['__sql_get_contributions']
-            infocase = get_info_case(con, self.casedefsub, caseid)
-            cmd += 'python tools/submit.py'
-            for c, i in zip(self.casedefsub, infocase):
-              if i != None:
-                cmd += f' --{c} {i}'
-            cmd += ';'
-      metadata['submitcmd'] = cmd
-      plot.save(fig, output_file_base + '.pdf', bbox_inches = None, metadata = metadata)
+      if self.add_metadata:
+        cmd = ''
+        for k1, d1 in m.items():
+          for k2, d2 in d1.items():
+            k1d = json.loads(k1)
+            k1d[self.coi] = k2
+            caseid = d2['__auto_cases.rowid']
+            if caseid != None:
+              metadata[dict_to_metakey(k1d) + '-sqlcasequery'] = d2['__sql_case_query']
+              metadata[dict_to_metakey(k1d) + '-sqlcontrib'] = d2['__sql_get_contributions']
+              infocase = get_info_case(con, self.casedefsub, caseid)
+              cmd += 'python tools/submit.py'
+              for c, i in zip(self.casedefsub, infocase):
+                if i != None:
+                  cmd += f' --{c} {i}'
+              cmd += ';'
+        metadata['submitcmd'] = cmd
+      plot.save(fig, output_file_base + '.pdf', bbox_inches = 'tight', metadata = metadata)
       table.table(m, output_file_base + '.tex', list_cases, self.stat, columns, func = func)
       print(output_file_base + '.pdf')
     con.close()
