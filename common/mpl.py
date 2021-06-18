@@ -6,7 +6,10 @@ import json
 import re
 
 def genlabel(in_):
-  return str(tuple(in_)).replace("'",'')
+  s = ''
+  for i in in_:
+    s += str(i) + ', '
+  return s.rstrip(', ')
 
 def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', rcparams = dict()):
   plt.rcParams.update(rcparams)
