@@ -15,6 +15,8 @@ def get_nnz(y):
     nnz = y['NR'] * y['C'] - y['C'] * (y['C'] - 1) / 2
   elif y['matrixtype'] == 'nlpkkt120':
     nnz = 96845792
+  elif y['matrixtype'] == 'nlpkkt200':
+    nnz = 448225632
   return nnz
 
 def gflops(x, y):
