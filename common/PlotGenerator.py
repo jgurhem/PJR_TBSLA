@@ -25,6 +25,8 @@ def gflops(x, y):
   f = 0
   if y['op'] == 'a_axpx' or y['op'] == 'AAxpAx':
     f = (4 * nnz - y['NC'])
+  elif y['op'] == 'AAxpAxpx':
+    f = 4 * nnz
   elif y['op'] == 'spmv' or y['op'] == 'spmv_no_redist' or y['op'] == 'Ax' or y['op'] == 'Ax_':
     f = (2 * nnz - y['NC'])
   return f / x / 1e9
