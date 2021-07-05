@@ -2,6 +2,8 @@ import numpy as np
 import json
 import re
 from .mpl import genlabel, FUNC_DEFAULT
+from ..pjr import DBHelper as dh
+import sqlite3
 
 def table(m, filename, legend, stat, columns = list(), func = FUNC_DEFAULT):
   row_keys = set()
@@ -56,3 +58,95 @@ def table(m, filename, legend, stat, columns = list(), func = FUNC_DEFAULT):
   f.write(r)
   f.close()
   return r
+
+
+def table2(db, relname, filter_dict, cases, sub_cases, sub_col, stat, coi, voi, func = FUNC_DEFAULT, dec = 2):
+  con = sqlite3.connect(db)
+  cur = con.cursor()
+  s = ''
+
+  query = f'SELECT DISTINCT {coi} FROM {relname}_cases WHERE'
+  query += dh.generate_conditions_where(filter_dict)
+  if query.endswith(' WHERE'):
+    query = query[:-6]
+  cur.execute(query)
+  res = cur.fetchall()
+  columns = [x[0] for x in res]
+  columns = sorted(columns)
+
+  query = f'SELECT DISTINCT {sub_col} FROM {relname}_cases WHERE'
+  query += dh.generate_conditions_where(filter_dict)
+  if query.endswith(' WHERE'):
+    query = query[:-6]
+  cur.execute(query)
+  res = cur.fetchall()
+  scolumns = [x[0] for x in res]
+  scolumns = sorted(scolumns)
+
+  query = 'SELECT DISTINCT '
+  for i in cases:
+    query += i + ','
+  query = query.rstrip(',')
+  query += f' FROM {relname}_cases WHERE'
+  query += dh.generate_conditions_where(filter_dict)
+  if query.endswith(' WHERE'):
+    query = query[:-6]
+  cur.execute(query)
+  rows = cur.fetchall()
+  rows = sorted(rows, key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', str(x))])
+
+
+  s += '\\begin{tabular}{'
+  s += 'c' * (len(cases) + len(scolumns) * len(columns))
+  s += '}\n\\hline\n'
+
+  for i in cases:
+    s += '\multirow{2}{*}{' + str(i).replace('_', '\_') + '} &'
+  for sc in scolumns:
+    s += ' \multicolumn{2}{c}{' + str(sc).replace('_', '\_') + '} &'
+  s = s.rstrip('&')
+  s+= '\\\\\n'
+  for i in range(len(cases) - 1):
+    s += '&'
+  for sc in scolumns:
+    for c in columns:
+      s += f'& {c}'
+  s+= '\\\\\n'
+  s += '\\hline\n'
+
+  for r in rows:
+    for i in r:
+      if i != None:
+        s += f' {i}'
+      s += ' &'
+    s = s.rstrip('&')
+    for sc in scolumns:
+      for c in columns:
+        keys = [stat] + sub_cases + ['rowid', 'N']
+        query = f'SELECT {relname}_{voi}_stats.{stat}'
+        for i in sub_cases:
+          query += f',{relname}_cases.{i}'
+        query += f',{relname}_cases.rowid,{relname}_{voi}_stats.N FROM {relname}_{voi}_stats INNER JOIN {relname}_cases ON {relname}_{voi}_stats.rowid={relname}_cases.rowid WHERE '
+        query += f"{coi}='{c}'"
+        query += f"AND {sub_col}='{sc}'"
+        for i in range(len(cases)):
+          if r[i] == None:
+            query += f' AND {relname}_cases.' + cases[i] + " is null"
+          else:
+            query += f' AND {relname}_cases.' + cases[i] + "='" + str(r[i]) + "'"
+        query += ' AND '
+        query += dh.generate_conditions_where(filter_dict, f'{relname}_cases')
+        if query.endswith(' AND '):
+          query = query[:-5]
+        cur.execute(query)
+        res = cur.fetchall()
+        if res != None and len(res) > 0:
+          min_pos = np.argmin([float(x[0]) for x in res])
+          v = res[min_pos][0]
+          d = dict(zip(keys, res[min_pos]))
+          s += f' & {func(v, d):.{dec}f}'
+    s += ' \\\\\n'
+  s += '\\hline\n'
+  s += '\\end{tabular}\n'
+
+  return s
