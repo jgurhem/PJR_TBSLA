@@ -17,6 +17,10 @@ def get_nnz(y):
     nnz = 96845792
   elif y['matrixtype'] == 'nlpkkt200':
     nnz = 448225632
+  elif y['matrixtype'] == 'cage14':
+    nnz = 27130349
+  elif y['matrixtype'] == 'cage15':
+    nnz = 99199551
   return nnz
 
 def gflops(x, y):
