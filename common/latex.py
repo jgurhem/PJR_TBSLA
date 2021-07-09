@@ -103,7 +103,7 @@ def table2(db, relname, filter_dict, cases, sub_cases, sub_col, stat, coi, voi, 
   for i in cases:
     s += '\multirow{2}{*}{' + str(i).replace('_', '\_') + '} &'
   for sc in scolumns:
-    s += ' \multicolumn{2}{c}{' + str(sc).replace('_', '\_') + '} &'
+    s += ' \multicolumn{' + str(len(columns)) + '}{c}{' + str(sc).replace('_', '\_') + '} &'
   s = s.rstrip('&')
   s+= '\\\\\n'
   for i in range(len(cases) - 1):
