@@ -14,6 +14,9 @@ def genlabel(in_):
 def FUNC_DEFAULT(x, y):
   return x
 
+def sort_func(x):
+  return re.split(r'([^0-9.]+)', x)
+
 def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True, func = FUNC_DEFAULT, keep_missing = True, nbest = 0):
   fig = plt.figure()
   ax = fig.gca()
@@ -22,7 +25,7 @@ def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linea
   ydict = dict()
 
   if sort:
-    keys = sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)])
+    keys = sorted(m.keys(), key = sort_func)
   else:
    keys = m.keys()
   for k in keys:
@@ -91,7 +94,7 @@ def plot_bar(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear
   len_mkeys = len(m.keys())
   pos = 0
 
-  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+  for k in sorted(m.keys(), key = sort_func):
     v = m[k]
     if pv:
       print()
@@ -129,7 +132,7 @@ def plot_ratios_1_on_n_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, x
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
 
-  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+  for k in sorted(m.keys(), key = sort_func):
     v = m[k]
     if pv:
       print()
@@ -173,7 +176,7 @@ def plot_ratios_n_on_1_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, x
   ax = fig.gca()
   xvec = np.arange(len(coi_set))
 
-  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+  for k in sorted(m.keys(), key = sort_func):
     v = m[k]
     if pv:
       print()

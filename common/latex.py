@@ -5,6 +5,9 @@ from .mpl import genlabel, FUNC_DEFAULT
 from ..pjr import DBHelper as dh
 import sqlite3
 
+def sort_func(x):
+  return re.split(r'([^0-9.]+)', x)
+
 def table(m, filename, legend, stat, columns = list(), func = FUNC_DEFAULT):
   row_keys = set()
   column_keys = set()
@@ -35,7 +38,7 @@ def table(m, filename, legend, stat, columns = list(), func = FUNC_DEFAULT):
   r += ' & N & Ncase \\\\'
   r += '\n\\hline\n'
 
-  for k in sorted(m.keys(), key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', x)]):
+  for k in sorted(m.keys(), key = sort_func):
     v = m[k]
     k_dict = json.loads(k)
     r += '\multirow{' + str(len(row_keys)) + '}{*}{' + genlabel([k_dict[i] for i in legend]) + '}'
@@ -93,7 +96,7 @@ def table2(db, relname, filter_dict, cases, sub_cases, sub_col, stat, coi, voi, 
     query = query[:-6]
   cur.execute(query)
   rows = cur.fetchall()
-  rows = sorted(rows, key = lambda x:[int(s) if s.isdigit() else s for s in re.split(r'(\d+)', str(x))])
+  rows = sorted(rows, key = sort_func):
 
 
   s += '\\begin{tabular}{'
