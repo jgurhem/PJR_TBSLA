@@ -6,7 +6,13 @@ from ..pjr import DBHelper as dh
 import sqlite3
 
 def sort_func(x):
-  return re.split(r'([^0-9.]+)', str(x))
+  r = []
+  for s in re.split(r'([^0-9.]+)', str(x)):
+    try:
+      r.append(float(s))
+    except ValueError:
+      r.append(s)
+  return r
 
 def table(m, filename, legend, stat, columns = list(), func = FUNC_DEFAULT):
   row_keys = set()

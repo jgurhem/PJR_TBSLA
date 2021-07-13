@@ -15,7 +15,13 @@ def FUNC_DEFAULT(x, y):
   return x
 
 def sort_func(x):
-  return re.split(r'([^0-9.]+)', x)
+  r = []
+  for s in re.split(r'([^0-9.]+)', x):
+    try:
+      r.append(float(s))
+    except ValueError:
+      r.append(s)
+  return r
 
 def plot_axis(m, coi_set, attribute, xlabel, ylabel, legend, pv, xscale = 'linear', yscale = 'linear', sort = True, func = FUNC_DEFAULT, keep_missing = True, nbest = 0):
   fig = plt.figure()
