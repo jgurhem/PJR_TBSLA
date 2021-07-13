@@ -6,7 +6,7 @@ from ..pjr import DBHelper as dh
 import sqlite3
 
 def sort_func(x):
-  return re.split(r'([^0-9.]+)', x)
+  return re.split(r'([^0-9.]+)', str(x))
 
 def table(m, filename, legend, stat, columns = list(), func = FUNC_DEFAULT):
   row_keys = set()
@@ -96,7 +96,7 @@ def table2(db, relname, filter_dict, cases, sub_cases, sub_col, stat, coi, voi, 
     query = query[:-6]
   cur.execute(query)
   rows = cur.fetchall()
-  rows = sorted(rows, key = sort_func):
+  rows = sorted(rows, key = sort_func)
 
 
   s += '\\begin{tabular}{'
