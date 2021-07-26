@@ -33,6 +33,8 @@ def gflops(x, y):
     f = 4 * nnz
   elif y['op'] == 'spmv' or y['op'] == 'spmv_no_redist' or y['op'] == 'Ax' or y['op'] == 'Ax_':
     f = (2 * nnz - y['NC'])
+  elif y['op'] == 'pagerank':
+    f = (2 * nnz + 3 * int(y['matrix_dim'])) * int(y['nb_iterations']) + 2 * int(y['matrix_dim'])
   return f / x / 1e9
 
 class Flops:
